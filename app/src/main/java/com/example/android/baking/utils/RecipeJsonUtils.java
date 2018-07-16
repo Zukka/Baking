@@ -21,12 +21,14 @@ public class RecipeJsonUtils {
         AppDatabase mDb = AppDatabase.getInstance(context.getApplicationContext());
 
         JSONArray recipeJson = new JSONArray(jsonResponse);
-        JSONArray recipeSteps = new JSONArray();
-        JSONObject ingredientObject = new JSONObject();
-        JSONObject stepObject = new JSONObject();
+        JSONArray recipeSteps;
+        JSONObject ingredientObject;
+        JSONObject stepObject;
 
         List<Recipe> parsedRecipeData = new ArrayList<>();
 
+        mDb.stepsDao().nukeTable();
+        mDb.ingredientsDao().nukeTable();
         for (int index = 0; index < recipeJson.length(); index++) {
             JSONObject recipeObject = recipeJson.getJSONObject(index);
             int mRecipeId =(int)recipeObject.get(RecipeJsonConstants.RECIPE_ID);
@@ -38,7 +40,6 @@ public class RecipeJsonUtils {
             parsedRecipeData.add(recipe);
 
             JSONArray recipeIngredients = recipeObject.getJSONArray(RecipeJsonConstants.RECIPE_INGREDIENTS);
-            recipeSteps = recipeObject.getJSONArray(RecipeJsonConstants.RECIPE_STEPS);
             for (int ingredientsIndex = 0; ingredientsIndex < recipeIngredients.length(); ingredientsIndex++) {
                 ingredientObject = recipeIngredients.getJSONObject(ingredientsIndex);
                 Ingredient ingredient = new Ingredient(
@@ -49,23 +50,25 @@ public class RecipeJsonUtils {
                 );
                 mDb.ingredientsDao().insertIngredient(ingredient);
             }
-
+            recipeSteps = recipeObject.getJSONArray(RecipeJsonConstants.RECIPE_STEPS);
             for (int stepIndex = 0; stepIndex < recipeSteps.length(); stepIndex++) {
                 stepObject = recipeSteps.getJSONObject(stepIndex);
                 // public Step(int RecipeId, String StepId, String ShortDescription, String Description, String VideoURL, String ThumbnailURL) {
-                if ((int)stepObject.get(RecipeJsonConstants.RECIPE_ID) == mRecipeId) {
-                    Step step = new Step(
-                            mRecipeId,
-                            stepObject.get(RecipeJsonConstants.STEP_ID).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_SHORT_DESCRIPTION).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_DESCRIPTION).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_VIDEO_URL).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_THUMBNAIL_URL).toString()
-                    );
-                    mDb.stepsDao().insertStep(step);
-                }
+                Step step = new Step(
+                        mRecipeId,
+                        stepObject.get(RecipeJsonConstants.STEP_ID).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_SHORT_DESCRIPTION).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_DESCRIPTION).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_VIDEO_URL).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_THUMBNAIL_URL).toString()
+                );
+                mDb.stepsDao().insertStep(step);
             }
         }
         return parsedRecipeData;
+    }
+
+    private void RecipeSteps() {
+
     }
 }

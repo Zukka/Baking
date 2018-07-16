@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.android.baking.data.AppDatabase;
 import com.example.android.baking.model.Recipe;
 import com.example.android.baking.utils.NetworkConstants;
 import com.example.android.baking.utils.NetworkUtils;
@@ -26,11 +27,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recipeReciclerView;
     private LinearLayoutManager mLayoutManager;
     private RecipeRecycleViewAdapter recipeRecycleViewAdapter;
+    private AppDatabase mDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDb = AppDatabase.getInstance(getApplicationContext());
         loadingDataProgressBar = findViewById(R.id.progressBar);
         recipeReciclerView = findViewById(R.id.home_recycled_view);
         recipeReciclerView.setHasFixedSize(true);
