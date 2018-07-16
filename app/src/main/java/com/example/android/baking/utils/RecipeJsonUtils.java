@@ -41,13 +41,12 @@ public class RecipeJsonUtils {
             for (int ingredientsIndex = 0; ingredientsIndex < recipeIngredients.length(); ingredientsIndex++) {
                 ingredientObject = recipeIngredients.getJSONObject(ingredientsIndex);
                 Ingredient ingredient = new Ingredient(
-                        (int)ingredientObject.get(RecipeJsonConstants.RECIPE_ID),
+                        recipe.getId(),
                         ingredientObject.get(RecipeJsonConstants.INGREDIENT_QUNATITY).toString(),
                         ingredientObject.get(RecipeJsonConstants.INGREDIENT_MEASURE).toString(),
                         ingredientObject.get(RecipeJsonConstants.INGREDIENT_NAME).toString()
                 );
                 mDb.ingredientsDao().insertIngredient(ingredient);
-                System.out.println(recipeIngredients);
             }
 
             for (int stepIndex = 0; stepIndex < recipeSteps.length(); stepIndex++) {
@@ -55,7 +54,7 @@ public class RecipeJsonUtils {
                 // public Step(int RecipeId, String StepId, String ShortDescription, String Description, String VideoURL, String ThumbnailURL) {
 
                 Step step = new Step(
-                        (int)stepObject.get(RecipeJsonConstants.RECIPE_ID),
+                        recipe.getId(),
                         stepObject.get(RecipeJsonConstants.STEP_ID).toString(),
                         stepObject.get(RecipeJsonConstants.STEP_SHORT_DESCRIPTION).toString(),
                         stepObject.get(RecipeJsonConstants.STEP_DESCRIPTION).toString(),
@@ -63,7 +62,6 @@ public class RecipeJsonUtils {
                         stepObject.get(RecipeJsonConstants.STEP_THUMBNAIL_URL).toString()
                 );
                 mDb.stepsDao().insertStep(step);
-                System.out.println(recipeSteps);
             }
         }
         return parsedRecipeData;
