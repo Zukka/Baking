@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,20 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipe = savedInstanceState.getParcelable(RecipeJsonConstants.RECIPE);
         }
 
+        Toolbar recipeToolbar = findViewById(R.id.recipe_toolbar);
+        recipeToolbar.setTitle(recipe.getTitle());
+        setSupportActionBar(recipeToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        CardView ingredientsCardView;
+        ingredientsCardView = findViewById(R.id.ingredients_card);
+        ingredientsCardView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(RecipeDetailsActivity.this, IngredientsActivity.class));
+            }
+        });
+
         stepsReciclerView = findViewById(R.id.steps_recycled_view);
         stepsReciclerView.setHasFixedSize(true);
         stepLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -53,6 +68,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         stepRecycleViewAdapter = new StepRecycleViewAdapter(this);
         stepsReciclerView.setAdapter(stepRecycleViewAdapter);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public class RequestSteps extends AsyncTask<Integer, Void, List<Step>> {
