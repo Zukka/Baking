@@ -1,6 +1,7 @@
 package com.example.android.baking.utils;
 
 public class RecipeJsonConstants {
+    public static final String RECIPE = "recipe";
     public static final String RECIPE_ID = "id";
     public static final String RECIPE_NAME = "name";
     public static final String RECIPE_SERVING = "servings";

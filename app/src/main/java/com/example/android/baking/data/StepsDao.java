@@ -14,6 +14,9 @@ public interface StepsDao {
     @Query("SELECT * FROM steps")
     List<Step> getAllSteps();
 
+    @Query("SELECT * FROM steps WHERE recipe_id = :recipeID ")
+    List<Step> retriveSteps(int recipeID);
+
     @Insert
     void insertStep(Step step);
 }

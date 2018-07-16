@@ -2,4 +2,5 @@
     <string name="app_name">Baking</string>
     <string name="loadRecipesFailed">Download recipes failed.</string>
     <string name="title_activity_recipe_details">RecipeDetailsActivity</string>
+    <string name="queryFailed">Error: Query to database failed.</string>
 </resources>
