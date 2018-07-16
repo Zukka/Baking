@@ -16,6 +16,9 @@ public interface IngredientsDao {
     @Query("SELECT * FROM ingredients")
     List<Ingredient> getAllIngredients();
 
+    @Query("SELECT * FROM ingredients WHERE recipe_id = :recipeID")
+    List<Ingredient> retriveIngredients(int recipeID);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertIngredient(Ingredient ingredient);
 

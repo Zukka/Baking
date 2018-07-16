@@ -54,7 +54,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         ingredientsCardView = findViewById(R.id.ingredients_card);
         ingredientsCardView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(RecipeDetailsActivity.this, IngredientsActivity.class));
+                Intent intentShowIngredients = new Intent(RecipeDetailsActivity.this, IngredientsActivity.class);
+                intentShowIngredients.putExtra("recipe", recipe);
+                startActivity(intentShowIngredients);
             }
         });
 
@@ -68,6 +70,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         stepRecycleViewAdapter = new StepRecycleViewAdapter(this);
         stepsReciclerView.setAdapter(stepRecycleViewAdapter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RecipeJsonConstants.RECIPE, recipe);
     }
 
     @Override
