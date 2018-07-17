@@ -4,4 +4,7 @@
     <string name="title_activity_recipe_details">RecipeDetailsActivity</string>
     <string name="queryFailed">Error: Query to database failed.</string>
     <string name="ingredients">Ingredients</string>
+    <string name="next">Next</string>
+    <string name="prev">Previous</string>
+    <string name="missedInstruction">Instruction not present</string>
 </resources>

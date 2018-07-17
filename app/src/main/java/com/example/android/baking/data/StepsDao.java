@@ -16,7 +16,10 @@ public interface StepsDao {
     List<Step> getAllSteps();
 
     @Query("SELECT * FROM steps WHERE recipe_id = :recipeID")
-    List<Step> retriveSteps(int recipeID);
+    List<Step> retrieveSteps(int recipeID);
+
+    @Query("SELECT * FROM steps WHERE recipe_id = :recipeID AND step_id = :stepID")
+    List<Step> retrieveStep(int recipeID, int stepID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStep(Step step);

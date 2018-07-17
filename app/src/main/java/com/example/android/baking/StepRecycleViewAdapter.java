@@ -1,13 +1,16 @@
 package com.example.android.baking;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.baking.model.Recipe;
 import com.example.android.baking.model.Step;
+import com.example.android.baking.utils.RecipeJsonConstants;
 
 import java.util.List;
 
@@ -40,8 +43,16 @@ public class StepRecycleViewAdapter extends RecyclerView.Adapter<StepRecycleView
     @Override
     public void onBindViewHolder(StepRecycleViewAdapter.StepsViewHolder holder, int position) {
         final Step step = mStepData.get(position);
-
         holder.stepDescription.setText(step.getDescription());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentShowStepDetails = new Intent(mContext, StepDetailActivity.class);
+                intentShowStepDetails.putExtra(RecipeJsonConstants.RECIPE, step.getRecipeId());
+                intentShowStepDetails.putExtra("selectedStep", Integer.parseInt(step.getStepId()));
+                mContext.startActivity(intentShowStepDetails);
+            }
+        });
     }
 
     @Override
