@@ -100,12 +100,12 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
                     exoPlayerView.setVisibility(View.VISIBLE);
                     videoNotAvailable.setVisibility(View.GONE);
                 } else {
-                    exoPlayerView.setVisibility(View.GONE);
+                    exoPlayerView.setVisibility(View.INVISIBLE);
                     videoNotAvailable.setVisibility(View.VISIBLE);
                 }
-                if (Integer.parseInt(step.getStepId()) == 1)
+                if (Integer.parseInt(step.getStepId()) == 0)
                     mButtonPrev.setEnabled(false);
-                if (Integer.parseInt(step.getStepId()) == steps.size())
+                if (Integer.parseInt(step.getStepId()) == (steps.size() - 1))
                     mButtonNext.setEnabled(false);
                 UpdateUIOrientation();
                 return;

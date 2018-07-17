@@ -32,7 +32,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:visibility="gone"
         android:text="@string/noVideo"
         app:layout_constraintBottom_toTopOf="@+id/instructionText"
         app:layout_constraintEnd_toEndOf="@+id/playerView"
