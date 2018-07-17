@@ -50,13 +50,12 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
     SimpleExoPlayerView exoPlayerView;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
-    int layoutOrientation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_step_detail);
-        layoutOrientation = getResources().getConfiguration().orientation;
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         if (savedInstanceState == null) {
@@ -115,7 +114,7 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
     }
 
     private void UpdateUIOrientation() {
-        if (layoutOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mButtonNext.setVisibility(View.GONE);
             mButtonPrev.setVisibility(View.GONE);
             description.setVisibility(View.GONE);

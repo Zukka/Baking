@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar loadingDataProgressBar;
     private RecyclerView recipeReciclerView;
     private LinearLayoutManager mLayoutManager;
+    private GridLayoutManager mGridLayoutManager;
     private RecipeRecycleViewAdapter recipeRecycleViewAdapter;
     private AppDatabase mDb;
     @Override
@@ -37,8 +39,16 @@ public class MainActivity extends AppCompatActivity {
         loadingDataProgressBar = findViewById(R.id.progressBar);
         recipeReciclerView = findViewById(R.id.home_recycled_view);
         recipeReciclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
-        recipeReciclerView.setLayoutManager(mLayoutManager);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && width >= 600) {
+            mGridLayoutManager = new GridLayoutManager(this, (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) ? 3 : 3);
+            recipeReciclerView.setLayoutManager(mGridLayoutManager);
+        } else {
+            mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            recipeReciclerView.setLayoutManager(mLayoutManager);
+        }
         recipeReciclerView.setItemAnimator(new DefaultItemAnimator());
 
         DownloadRecipes();
