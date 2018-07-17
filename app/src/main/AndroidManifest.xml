@@ -30,6 +30,11 @@
             android:name=".StepDetailActivity"
             android:label="@string/title_activity_recipe_details"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

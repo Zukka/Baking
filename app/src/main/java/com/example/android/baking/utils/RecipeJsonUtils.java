@@ -52,19 +52,16 @@ public class RecipeJsonUtils {
             }
             recipeSteps = recipeObject.getJSONArray(RecipeJsonConstants.RECIPE_STEPS);
             for (int stepIndex = 0; stepIndex < recipeSteps.length(); stepIndex++) {
-                stepObject = recipeSteps.getJSONObject(stepIndex);
-                // public Step(int RecipeId, String StepId, String ShortDescription, String Description, String VideoURL, String ThumbnailURL) {
-                if ((int)stepObject.get(RecipeJsonConstants.STEP_ID) != 0) {
-                    Step step = new Step(
-                            mRecipeId,
-                            stepObject.get(RecipeJsonConstants.STEP_ID).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_SHORT_DESCRIPTION).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_DESCRIPTION).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_VIDEO_URL).toString(),
-                            stepObject.get(RecipeJsonConstants.STEP_THUMBNAIL_URL).toString()
-                    );
-                    mDb.stepsDao().insertStep(step);
-                }
+               stepObject = recipeSteps.getJSONObject(stepIndex);
+               Step step = new Step(
+                        mRecipeId,
+                        stepObject.get(RecipeJsonConstants.STEP_ID).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_SHORT_DESCRIPTION).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_DESCRIPTION).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_VIDEO_URL).toString(),
+                        stepObject.get(RecipeJsonConstants.STEP_THUMBNAIL_URL).toString()
+                );
+                mDb.stepsDao().insertStep(step);
             }
         }
         return parsedRecipeData;
