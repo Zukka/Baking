@@ -1,6 +1,7 @@
 package com.example.android.baking;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +50,13 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
     SimpleExoPlayerView exoPlayerView;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
-
+    int layoutOrientation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_step_detail);
+        layoutOrientation = getResources().getConfiguration().orientation;
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         if (savedInstanceState == null) {
@@ -104,12 +107,25 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
                     mButtonPrev.setEnabled(false);
                 if (Integer.parseInt(step.getStepId()) == steps.size())
                     mButtonNext.setEnabled(false);
-
+                UpdateUIOrientation();
                 return;
             }
         }
         description.setText(String.valueOf(stepID) + " - " + getString(R.string.missedInstruction));
     }
+
+    private void UpdateUIOrientation() {
+        if (layoutOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mButtonNext.setVisibility(View.GONE);
+            mButtonPrev.setVisibility(View.GONE);
+            description.setVisibility(View.GONE);
+            videoNotAvailable.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            videoNotAvailable.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+            exoPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            exoPlayerView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
