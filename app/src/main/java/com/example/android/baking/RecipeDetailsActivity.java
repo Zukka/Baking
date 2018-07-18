@@ -70,9 +70,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ExoPlaye
             recipe = savedInstanceState.getParcelable(RecipeJsonConstants.RECIPE);
         }
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
         if (findViewById(R.id.layout_recipe_tablet) != null) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             isTablet = true;
