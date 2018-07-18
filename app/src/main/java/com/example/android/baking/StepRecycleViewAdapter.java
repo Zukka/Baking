@@ -44,15 +44,27 @@ public class StepRecycleViewAdapter extends RecyclerView.Adapter<StepRecycleView
     public void onBindViewHolder(StepRecycleViewAdapter.StepsViewHolder holder, int position) {
         final Step step = mStepData.get(position);
         holder.stepDescription.setText(step.getDescription());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentShowStepDetails = new Intent(mContext, StepDetailActivity.class);
-                intentShowStepDetails.putExtra(RecipeJsonConstants.RECIPE, step.getRecipeId());
-                intentShowStepDetails.putExtra("selectedStep", Integer.parseInt(step.getStepId()));
-                mContext.startActivity(intentShowStepDetails);
-            }
-        });
+        if (RecipeDetailsActivity.isTablet) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mContext instanceof RecipeDetailsActivity){
+                        ((RecipeDetailsActivity)mContext).OnStepClickedOnTablet(step);
+                    }
+                }
+            });
+
+        } else {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentShowStepDetails = new Intent(mContext, StepDetailActivity.class);
+                    intentShowStepDetails.putExtra(RecipeJsonConstants.RECIPE, step.getRecipeId());
+                    intentShowStepDetails.putExtra("selectedStep", Integer.parseInt(step.getStepId()));
+                    mContext.startActivity(intentShowStepDetails);
+                }
+            });
+        }
     }
 
     @Override

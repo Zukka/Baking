@@ -195,6 +195,7 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
             mediaSession.setActive(false);
         }
     }
+
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
 
