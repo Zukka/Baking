@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -152,6 +154,11 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ExoPlaye
             initializePlayerTablet(Uri.parse(step.getVideoURL()));
             exoPlayerViewTablet.setVisibility(View.VISIBLE);
             tabletVideoNotAvailable.setVisibility(View.GONE);
+        } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()){
+            initializeMediaSessionTablet();
+            initializePlayerTablet(Uri.parse(step.getThumbnailURL()));
+            exoPlayerViewTablet.setVisibility(View.INVISIBLE);
+            tabletVideoNotAvailable.setVisibility(View.INVISIBLE);
         } else {
             exoPlayerViewTablet.setVisibility(View.INVISIBLE);
             tabletVideoNotAvailable.setVisibility(View.VISIBLE);

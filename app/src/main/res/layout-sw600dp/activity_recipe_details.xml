@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
     android:background="@color/grey_300"
     android:orientation="vertical"
@@ -83,6 +84,14 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/noVideo" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/thumbnail_imageTablet"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
 
             <TextView

@@ -11,11 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.baking.data.AppDatabase;
 import com.example.android.baking.model.Step;
+import com.example.android.baking.utils.PlayerConstants;
 import com.example.android.baking.utils.RecipeJsonConstants;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -33,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -50,6 +53,8 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
     SimpleExoPlayerView exoPlayerView;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    boolean getPlayerWhenReady = true;
+    long playerPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,11 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
                     initializePlayer(Uri.parse(step.getVideoURL()));
                     exoPlayerView.setVisibility(View.VISIBLE);
                     videoNotAvailable.setVisibility(View.GONE);
+                } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+                    initializeMediaSession();
+                    initializePlayer(Uri.parse(step.getThumbnailURL()));
+                    exoPlayerView.setVisibility(View.VISIBLE);
+                    videoNotAvailable.setVisibility(View.GONE);
                 } else {
                     exoPlayerView.setVisibility(View.INVISIBLE);
                     videoNotAvailable.setVisibility(View.VISIBLE);
@@ -125,13 +135,26 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         }
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        playerPosition = savedInstanceState.getLong(PlayerConstants.PLAYER_POSITION);
+        getPlayerWhenReady = savedInstanceState.getBoolean(PlayerConstants.PLAYER_STATE);
+        exoPlayer.seekTo(playerPosition);
+        exoPlayer.setPlayWhenReady(getPlayerWhenReady);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(RecipeJsonConstants.RECIPE, recipeID);
         outState.putInt("selectedStep", stepID);
+        playerPosition = exoPlayer.getContentPosition();
+        outState.putLong(PlayerConstants.PLAYER_POSITION, playerPosition);
+        getPlayerWhenReady = exoPlayer.getPlayWhenReady();
+        outState.putBoolean(PlayerConstants.PLAYER_STATE, getPlayerWhenReady);
     }
+
     private void initializeMediaSession() {
 
         mediaSession = new MediaSessionCompat(this, "Steps");
@@ -167,6 +190,37 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
         });
         mediaSession.setActive(true);
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer(null);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || exoPlayer == null)) {
+            initializePlayer(null);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
 
     private void initializePlayer(Uri mediaUri) {
         if (exoPlayer == null) {
@@ -180,7 +234,8 @@ public class StepDetailActivity extends AppCompatActivity implements ExoPlayer.E
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.seekTo(playerPosition);
+            exoPlayer.setPlayWhenReady(getPlayerWhenReady);
         }
     }
 
