@@ -8,4 +8,9 @@
     <string name="prev">Previous</string>
     <string name="missedInstruction">Instruction not present</string>
     <string name="noVideo">Video not available</string>
+    <string name="appwidget_text">Recipe Instruction</string>
+    <string name="add_widget">Add widget</string>
+    <string name="action_favorite">Set Favorite</string>
+    <string name="noFavTitle">-</string>
+    <string name="noFavIngredients">Add a recipe to favorite.</string>
 </resources>

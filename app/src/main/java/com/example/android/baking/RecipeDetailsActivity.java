@@ -1,8 +1,11 @@
 package com.example.android.baking;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,12 +17,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.baking.data.AppDatabase;
+import com.example.android.baking.model.Ingredient;
 import com.example.android.baking.model.Recipe;
 import com.example.android.baking.model.Step;
 import com.example.android.baking.utils.RecipeJsonConstants;
@@ -56,13 +62,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ExoPlaye
     private SimpleExoPlayer exoPlayer;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    private String ingredientsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
         mDb = AppDatabase.getInstance(getApplicationContext());
-
         if (savedInstanceState == null) {
             Intent detailsIntent = getIntent();
             recipe = detailsIntent.getParcelableExtra("recipe");
@@ -116,6 +122,26 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ExoPlaye
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.recipe_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.item_menu_favorite) {
+            new RequestIngredients().execute(recipe.getId());
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void OnStepClickedOnTablet(Step step) {
@@ -265,6 +291,36 @@ public class RecipeDetailsActivity extends AppCompatActivity implements ExoPlaye
             if (steps != null && steps.size() > 0) {
                 stepRecycleViewAdapter.setStepsData(steps);
                 stepsReciclerView.setAdapter(stepRecycleViewAdapter);
+            } else {
+                Toast.makeText(RecipeDetailsActivity.this, getString(R.string.queryFailed), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public class RequestIngredients extends AsyncTask<Integer, Void, List<Ingredient>> {
+
+        @Override
+        protected List<Ingredient> doInBackground(Integer... params) {
+            int recipeID = params[0];
+            List<Ingredient> ingredientData;
+            ingredientData = mDb.ingredientsDao().retriveIngredients(recipeID);
+
+            return ingredientData;
+        }
+
+        @Override
+        protected void onPostExecute(List<Ingredient> ingredients) {
+            super.onPostExecute(ingredients);
+
+            if (ingredients != null && ingredients.size() > 0) {
+                for (Ingredient ingredient : ingredients) {
+                    ingredientsList = ingredientsList + ingredient.getName() + "\n";
+                }
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(RecipeDetailsActivity.this);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(RecipeDetailsActivity.this, BakingWidgetProvider.class));
+
+                BakingWidgetProvider.updateTextWidgets(RecipeDetailsActivity.this, appWidgetManager,appWidgetIds, recipe.getTitle(), ingredientsList);
+
             } else {
                 Toast.makeText(RecipeDetailsActivity.this, getString(R.string.queryFailed), Toast.LENGTH_LONG).show();
             }
