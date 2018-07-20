@@ -1,16 +1,11 @@
 package com.example.android.baking;
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.room.DatabaseConfiguration;
-import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.example.android.baking.data.AppDatabase;
-import com.example.android.baking.data.IngredientsDao;
 import com.example.android.baking.data.StepsDao;
 import com.example.android.baking.model.Step;
 
