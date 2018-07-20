@@ -25,7 +25,8 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_ingredients, ingredients);
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-     //   views.setOnClickPendingIntent(R.id.widget_image, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_title, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_ingredients, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
